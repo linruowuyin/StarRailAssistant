@@ -32,6 +32,23 @@ def timestamped_print(*args, **kwargs):
 
 print = timestamped_print
 
+# 获取管理员权限
+def run_as_admin():
+    try:
+        # 检查是否已经有管理员权限
+        if ctypes.windll.shell32.IsUserAnAdmin():
+            return
+        # 如果没有管理员权限，则使用管理员权限重新启动脚本
+        script_path = os.path.abspath(sys.argv[0])
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, script_path, None, 1)
+        return  # 修改这里，使用return退出函数而不是sys.exit(0)
+    except Exception as e:
+        print(f"Failed to run as admin: {e}")
+        sys.exit(1)
+
+# 在这里运行获取管理员权限的函数
+run_as_admin()
+
 print("3s后开启录制,F9终止保存")
 time.sleep(3)
 print("start")
